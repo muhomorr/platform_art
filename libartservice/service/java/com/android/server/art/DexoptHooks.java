@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 
 class DexoptHooks {
     static final String TAG = DexoptHooks.class.getSimpleName();
-    
+
     static AtomicBoolean shouldWrapBgDexoptProgressCallback = new AtomicBoolean(true);
 
     @Nullable
@@ -23,8 +23,6 @@ class DexoptHooks {
             DexoptParams params, @Nullable Consumer<OperationProgress> orig) {
 
         switch (params.getReason()) {
-            case ReasonMapping.REASON_BOOT_AFTER_OTA:
-                break;
             case ReasonMapping.REASON_BG_DEXOPT:
                 if (shouldWrapBgDexoptProgressCallback.getAndSet(false)) {
                     break;
@@ -48,8 +46,6 @@ class DexoptHooks {
             Slog.d(TAG, "onDexoptProgress: reason " + reason + ", " + progress);
 
             switch (reason) {
-                case ReasonMapping.REASON_BOOT_AFTER_OTA ->
-                    pm.showDexoptProgressBootMessage(progress.getPercentage(), progress.getCurrent(), progress.getTotal());
                 case ReasonMapping.REASON_BG_DEXOPT ->
                     pm.onBgDexoptProgressUpdate(start, progress.getPercentage(), progress.getCurrent(), progress.getTotal());
             }

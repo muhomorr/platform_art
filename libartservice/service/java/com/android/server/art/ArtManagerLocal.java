@@ -1281,6 +1281,12 @@ public final class ArtManagerLocal {
                 return false;
             }
 
+            if (reason.equals(ReasonMapping.REASON_PRE_REBOOT_DEXOPT)) {
+                // pre-reboot dexopt runs ART code from next OTA update, it doesn't have access to
+                // system_server code that is called below
+                return true;
+            }
+
             List<DexContainerFileDexoptStatus> statuses = getDexoptStatus(snapshot, pkgState.getPackageName())
                 .getDexContainerFileDexoptStatuses();
 
